@@ -3,7 +3,8 @@ import { Box } from "@mui/material";
 import dynamic from "next/dynamic";
 import React from "react";
 import { MapProvider } from "./MapContext";
-import Sidebar from "./Sidebar";
+// import Sidebar from "./Sidebar";
+import Sidebar from "@/components/sidebarDashboard/SidebarSinarji";
 
 const MapView = dynamic(() => import("./MapView"), { ssr: false });
 
