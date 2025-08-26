@@ -1,0 +1,10 @@
+.esri-view .esri-view-surface {
+    border-radius: 10px;
+}
+
+.esri-view {
+    --esri-view-outline: 2px solid #ffffff00;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}

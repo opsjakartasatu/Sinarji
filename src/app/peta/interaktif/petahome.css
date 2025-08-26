@@ -1,0 +1,7 @@
+.esri-view .esri-view-surface {
+    border-radius: 20px;
+}
+
+.esri-view .esri-view-surface:focus:after {
+    outline: none;
+}

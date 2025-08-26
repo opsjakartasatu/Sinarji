@@ -1,0 +1,9 @@
+services:
+  rebranding-jkt1:
+    image: registry.dcktrp.id/rebranding-jkt1:${IMAGE_TAG}
+    container_name: rebranding-jkt1
+    restart: always
+    ports:
+      - "8072:3000"
+    labels:
+      io.portainer.accesscontrol.users: geoportal

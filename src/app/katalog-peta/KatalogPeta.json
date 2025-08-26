@@ -1,0 +1,672 @@
+{
+    "katalogPeta": [
+        {
+            "title": "mm-peta-taman-jakarta-barat",
+            "titleLeft": "MM Peta Taman Jakarta Barat | ",
+            "titleRight": "Badan Penanggulangan Bencana Daerah",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 7 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Timur"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 6 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Pusat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "xx-peta-taman-jakarta-barat",
+            "titleLeft": "XX Peta Taman Jakarta Barat",
+            "titleRight": "",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 5 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Utara"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 4 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Selatan"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis"
+            ]
+        },
+        {
+            "title": "ccc-peta-taman-jakarta-barat",
+            "titleLeft": "CCC Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 3 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Barat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat",
+            "titleRight": "",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 2 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Pusat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "z-peta-taman-jakarta-barat",
+            "titleLeft": "Z Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 1 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Timur"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "kkk-peta-taman-jakarta-barat",
+            "titleLeft": "KKK Peta Taman Jakarta Barat",
+            "titleRight": "",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 30 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Pusat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 29 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Timur"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "ppp-peta-taman-jakarta-barat",
+            "titleLeft": "PPP Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 28 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Selatan"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat",
+            "titleRight": "",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 27 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Barat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 26 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Pusat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat",
+            "titleRight": "",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 25 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Utara"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 24 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Timur"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 23 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Selatan"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Badan Pertanahan Nasional",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 22 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Selatan"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis",
+                "Layer peta sungai"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 21 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Barat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit"
+            ]
+        },
+        {
+            "title": "dddd-peta-taman-jakarta-barat",
+            "titleLeft": "DDDD Peta Taman Jakarta Barat | ",
+            "titleRight": "Badan Penanggulangan Bencana Daerah",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 20 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Pusat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta bis"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 19 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Timur"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 18 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Timur"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Badan Pertanahan Nasional",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 17 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Barat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta bis"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Badan Pengelolaan Aset Daerah",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 16 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Pusat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi rumah sakit"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat",
+            "titleRight": "Badan Pendapat Daerah",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Publik",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 15 November 2023",
+                "Sifat data publik",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Utara"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman"
+            ]
+        },
+        {
+            "title": "peta-taman-jakarta-barat",
+            "titleLeft": "Peta Taman Jakarta Barat | ",
+            "titleRight": "Dinas Sumber Daya Air",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 14 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Selatan"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit",
+                "Layer peta bis"
+            ]
+        },
+        {
+            "title": "uuuuuu-peta-taman-jakarta-barat",
+            "titleLeft": "Uuuuuu Peta Taman Jakarta Barat | ",
+            "titleRight": "Badan Pengelolaan Aset Daerah",
+            "desc": "Deskripsi Peta",
+            "button": "Detail Info",
+            "type": "Privat",
+            "imgSrc": "/assets/Gambar-detail-peta-katalog-peta.png",
+            "link": "",
+            "metadata": [
+                "Dibuat tanggal 13 November 2023",
+                "Sifat data privat",
+                "Proses update setiap bulan",
+                "Cakupan area Jakarta Barat"
+            ],
+            "komponenLayer": [
+                "Layer peta batas administrasi",
+                "Layer peta taman",
+                "Layer peta lokasi taman bermain",
+                "Layer peta lokasi rumah sakit"
+            ]
+        }
+    ],
+    "simpulJaringan": [
+        {
+            "id": "b817bd74-6197-11ee-847e-484d7eb96577",
+            "judul": "Badan Penanggulangan Bencana Daerah"
+        },
+        {
+            "id": "f4d7860e-6197-11ee-847e-484d7eb96577",
+            "judul": "Badan Pendapatan Daerah"
+        },
+        {
+            "id": "19fbfe07-619a-11ee-9305-506b8d729ce3",
+            "judul": "Badan Pengelolaan Aset Daerah"
+        },
+        {
+            "id": "28f7c946-619a-11ee-9305-506b8d729ce3",
+            "judul": "Badan Perencanaan Pembangunan Daerah"
+        },
+        {
+            "id": "3108ee58-619a-11ee-9305-506b8d729ce3",
+            "judul": "Badan Pertanahan Nasional"
+        },
+        {
+            "id": "48ea0354-619a-11ee-9305-506b8d729ce3",
+            "judul": "Biro Tata Pemerintahan"
+        },
+        {
+            "id": "4ec72deb-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Bina Marga"
+        },
+        {
+            "id": "54a65b28-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Cipta Karya,Tata Ruang, dan Pertanahan"
+        },
+        {
+            "id": "5d2577b5-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Pertamanan dan Hutan Kota"
+        },
+        {
+            "id": "6430e6e1-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Kesehatan"
+        },
+        {
+            "id": "6b2660f6-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Ketahanan Pangan Kelautan dan Pertanian"
+        },
+        {
+            "id": "724cab49-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Lingkungan Hidup"
+        },
+        {
+            "id": "7974ab07-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Pariwisata dan Ekonomi Kreatif"
+        },
+        {
+            "id": "7f885c7a-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Pemberdayaan, Perlindungan Anak, dan Pengendalian Penduduk"
+        },
+        {
+            "id": "8560bd74-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Pemuda dan Olahraga"
+        },
+        {
+            "id": "8c01722f-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu"
+        },
+        {
+            "id": "930a997a-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Penanggulangan Kebakaran dan Penyelamatan"
+        },
+        {
+            "id": "c975936c-619f-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Pendidikan"
+        },
+        {
+            "id": "a42ae910-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Perhubungan"
+        },
+        {
+            "id": "b8eb59b8-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Perumahan Rakyat dan Kawasan Pemukiman"
+        },
+        {
+            "id": "c159523c-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Sosial"
+        },
+        {
+            "id": "c8df4623-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Sumber Daya Air"
+        },
+        {
+            "id": "ceb600f6-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Tenaga Kerja Transmigrasi, dan Energi"
+        },
+        {
+            "id": "d5604ae8-619a-11ee-9305-506b8d729ce3",
+            "judul": "Jaklingko"
+        },
+        {
+            "id": "dc09c9b1-619a-11ee-9305-506b8d729ce3",
+            "judul": "Satuan Polisi Pamong Praja"
+        },
+        {
+            "id": "e1e1f8aa-619a-11ee-9305-506b8d729ce3",
+            "judul": "Biro Pendidikan dan Mental Spiritual"
+        },
+        {
+            "id": "e781993e-619a-11ee-9305-506b8d729ce3",
+            "judul": "Dinas Perindustrian, Perdagangan, Koprasi, Usaha Kecil dan Menengah"
+        }
+    ]
+}

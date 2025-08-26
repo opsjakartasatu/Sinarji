@@ -1,0 +1,58 @@
+image: docker
+
+services:
+  - name: docker:dind
+
+before_script:
+  - eval $(ssh-agent -s)
+  - chmod 400 "$INFRA_SSH_PRIVATE_KEY_NEW"
+  - ssh-add $INFRA_SSH_PRIVATE_KEY_NEW
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - cp "$SSH_KNOWN_HOSTS_ALL" ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
+stages:
+  - build
+  - deploy
+
+build-dev:
+  stage: build
+  script:
+    - cp "$APP_ENV_DEV" .env
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login "$DOCKER_REGISTRY_ADDR" --username "$DOCKER_REGISTRY_USERNAME" --password-stdin
+    - docker build -t "$DOCKER_REGISTRY_ADDR"/rebranding-jkt1:dev-latest .
+    - docker push "$DOCKER_REGISTRY_ADDR"/rebranding-jkt1:dev-latest
+  only:
+    - dev
+
+deploy-dev:
+  stage: deploy
+  script:
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login "$DOCKER_REGISTRY_ADDR" --username "$DOCKER_REGISTRY_USERNAME" --password-stdin
+    - DOCKER_HOST="ssh://$DEPLOY_DEV_USER@$DEPLOY_DEV2_IP" IMAGE_TAG="dev-latest" docker compose -f docker-compose.yml down --remove-orphans
+    - DOCKER_HOST="ssh://$DEPLOY_DEV_USER@$DEPLOY_DEV2_IP" IMAGE_TAG="dev-latest" docker compose -f docker-compose.yml pull
+    - DOCKER_HOST="ssh://$DEPLOY_DEV_USER@$DEPLOY_DEV2_IP" IMAGE_TAG="dev-latest" docker compose -f docker-compose.yml up -d
+  only:
+    - dev
+
+build-prod:
+  stage: build
+  script:
+    - cp "$APP_ENV_PROD" .env
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login "$DOCKER_REGISTRY_ADDR" --username "$DOCKER_REGISTRY_USERNAME" --password-stdin
+    - docker build -t "$DOCKER_REGISTRY_ADDR"/rebranding-jkt1:latest .
+    - docker push "$DOCKER_REGISTRY_ADDR"/rebranding-jkt1:latest
+  only:
+    - main
+
+deploy-prod:
+  stage: deploy
+  script:
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login "$DOCKER_REGISTRY_ADDR" --username "$DOCKER_REGISTRY_USERNAME" --password-stdin
+    - DOCKER_HOST="ssh://$DEPLOY_PROD_USER@$DEPLOY_PROD3_IP" IMAGE_TAG="latest" docker compose -f docker-compose.yml down --remove-orphans
+    - DOCKER_HOST="ssh://$DEPLOY_PROD_USER@$DEPLOY_PROD3_IP" IMAGE_TAG="latest" docker compose -f docker-compose.yml pull
+    - DOCKER_HOST="ssh://$DEPLOY_PROD_USER@$DEPLOY_PROD3_IP" IMAGE_TAG="latest" docker compose -f docker-compose.yml up -d
+  only:
+    - main
+

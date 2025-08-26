@@ -1,0 +1,25 @@
+.leaflet-menu-btn {
+  position: absolute;
+  top: 10px; /* jarak dari atas */
+  left: 10px; /* jarak dari kiri */
+  z-index: 1000; /* supaya selalu di atas peta */
+
+  background-color: #1d4ed8; /* biru elegan */
+  color: white;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.leaflet-menu-btn:hover {
+  background-color: #2563eb; /* lebih terang saat hover */
+  transform: scale(1.1); /* efek zoom */
+}
