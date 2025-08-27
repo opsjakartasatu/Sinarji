@@ -16,7 +16,7 @@ export default function Navbar({ isPlaying, togglePlay, isSwipeMode, toggleSwipe
   const isMobile900 = useMediaQuery(theme.breakpoints.down("900"));
   const isMobile1010 = useMediaQuery(theme.breakpoints.down("1010"));
 
-  // 👉 Dropdown State
+  // Dropdown State
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState("");
   const open = Boolean(anchorEl);
@@ -41,7 +41,7 @@ export default function Navbar({ isPlaying, togglePlay, isSwipeMode, toggleSwipe
           justifyContent: "space-between",
         }}
       >
-        {/* 👉 Kiri: Logo */}
+        {/* Kiri: Logo */}
         <Box
           sx={{
             alignItems: "center",
@@ -70,7 +70,7 @@ export default function Navbar({ isPlaying, togglePlay, isSwipeMode, toggleSwipe
           </Link>
         </Box>
 
-        {/* 👉 Tengah: Judul */}
+        {/* Tengah: Judul */}
         <Typography
           variant="p"
           sx={{
