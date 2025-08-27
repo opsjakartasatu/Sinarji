@@ -17,13 +17,13 @@ export default function Sidebar() {
         onClick={() => setShowSidebar((s) => !s)}
         sx={{
           position: "absolute",
-          top: 16,
-          left: 16,
+          top: 90,
+          left: 35,
           zIndex: 2,
           bgcolor: "#0d47a1",
           color: "white",
-          width: 48,
-          height: 48,
+          width: 40,
+          height: 40,
           borderRadius: 1.5,
           boxShadow: 3,
           transition: "left 0.3s ease",
@@ -39,10 +39,10 @@ export default function Sidebar() {
           elevation={8}
           sx={{
             position: "absolute",
-            top: 72,
+            top: 135,
             left: 16,
             zIndex: 2,
-            width: 360,
+            width: 300,
             borderRadius: 3,
             bgcolor: "rgba(255,255,255,0.98)",
             overflow: "hidden",
@@ -68,7 +68,7 @@ export default function Sidebar() {
             </Box>
 
             {/* Daftar layer */}
-            <Box sx={{ maxHeight: "60vh", overflowY: "auto", pr: 1 }}>
+            <Box sx={{ maxHeight: "40vh", overflowY: "auto", pr: 1 }}>
               <List disablePadding>
                 {layersState.map((layer, i) => (
                   <Box key={`${layer.name}-${i}`} sx={{ mb: 1.5 }}>
