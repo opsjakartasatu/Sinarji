@@ -8,7 +8,7 @@ import { useMapContext } from "@/app/sinarji/MapContext";
 import { FaBars, FaChevronLeft } from "react-icons/fa";
 
 export default function Sidebar() {
-  const { layersState, showSidebar, setShowSidebar, handleToggle, handleOpacityChange, handleToggleSettings, handleRemoveAll } = useMapContext();
+  const { layersState, showSidebar, setShowSidebar, handleToggle, handleOpacityChange, handleToggleSettings, handleRemoveAll, activeMenu, activeSubMenu } = useMapContext();
 
   return (
     <>
@@ -40,7 +40,7 @@ export default function Sidebar() {
           sx={{
             position: "absolute",
             top: 135,
-            left: 16,
+            left: 35,
             zIndex: 2,
             width: 300,
             borderRadius: 3,
@@ -62,13 +62,13 @@ export default function Sidebar() {
                 fontWeight: 700,
               }}
             >
-              <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
-                Daftar Layer
+              <Typography variant="subtitle10" sx={{ fontWeight: 800 }}>
+                {activeMenu && activeSubMenu ? `Daftar Layer ${activeMenu} - ${activeSubMenu}` : "Daftar Layer"}
               </Typography>
             </Box>
 
             {/* Daftar layer */}
-            <Box sx={{ maxHeight: "40vh", overflowY: "auto", pr: 1 }}>
+            <Box sx={{ maxHeight: "20vh", overflowY: "auto", pr: 1 }}>
               <List disablePadding>
                 {layersState.map((layer, i) => (
                   <Box key={`${layer.name}-${i}`} sx={{ mb: 1.5 }}>
@@ -135,7 +135,6 @@ export default function Sidebar() {
               onClick={handleRemoveAll}
               sx={{
                 mt: 2,
-                py: 1.2,
                 borderRadius: 2,
                 fontWeight: 700,
                 textTransform: "none",
