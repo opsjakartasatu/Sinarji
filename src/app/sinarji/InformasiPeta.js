@@ -12,8 +12,8 @@ export default function InformasiPeta() {
 
   const judul = activeMenu && activeSubMenu ? `Peta ${activeMenu} - ${activeSubMenu}` : "";
 
-  // Ambil legend sesuai menu yang aktif
-  const menuLegends = legends[activeMenu] || [];
+    // Ambil legend sesuai submenu yang aktif
+  const menuLegends = activeMenu && activeSubMenu ? legends[activeMenu]?.[activeSubMenu] || [] : [];
 
   return (
     <Box
