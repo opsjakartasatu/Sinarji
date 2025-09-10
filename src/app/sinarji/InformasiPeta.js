@@ -12,20 +12,12 @@ export default function InformasiPeta() {
 
   const judul = activeMenu && activeSubMenu ? `Peta ${activeMenu} - ${activeSubMenu}` : "";
 
-    // Ambil legend sesuai submenu yang aktif
+  // Ambil legend sesuai submenu yang aktif
+  // Ambil legend sesuai submenu yang aktif
   const menuLegends = activeMenu && activeSubMenu ? legends[activeMenu]?.[activeSubMenu] || [] : [];
 
   return (
-    <Box
-      sx={{
-        position: "absolute",
-        mt: 1,
-        top: 450, // letak di bawah sidebar
-        left: 35,
-        zIndex: 2,
-        width: 320,
-      }}
-    >
+    <Box sx={{ width: "100%", maxWidth: 320 }}>
       <Paper elevation={6} sx={{ borderRadius: 3, overflow: "hidden" }}>
         {/* Header */}
         <Box
@@ -50,11 +42,6 @@ export default function InformasiPeta() {
         {/* Isi collapsible */}
         <Collapse in={open}>
           <CardContent>
-            {/* Judul peta */}
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              {judul}
-            </Typography>
-
             {/* Nilai pixel */}
             <Typography variant="body2" sx={{ mt: 1 }}>
               {activeSubMenu
