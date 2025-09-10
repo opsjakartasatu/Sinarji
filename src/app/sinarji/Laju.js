@@ -30,6 +30,7 @@ for (let year = 1975; year <= 2024; year++) {
       id: `laju-${year}`,
       name, // selalu satu nama sesuai interval
       title: `Laju Subs ${year}`, // tampil per tahun
+      year, // tambahin properti time series + scroll ke layer yang aktif
       opacity: 0.75,
       url,
     });

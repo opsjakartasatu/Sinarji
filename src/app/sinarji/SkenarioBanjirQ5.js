@@ -8,7 +8,7 @@ for (let year = 2007; year <= 2024; year++) {
     id: `q5-${year}`,
     name: `Banjir_Q5_${year}`,
     title: `Banjir Q5 - ${year}`,
-    // visible: year === 1975, // default aktif hanya 1975
+    year, // tambahin properti time series + scroll ke layer yang aktif
     opacity: 0.75,
     url, // penting untuk ambil GEOSERVER_URL_FEWS
   });

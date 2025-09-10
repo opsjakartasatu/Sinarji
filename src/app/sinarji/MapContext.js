@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useRef } from "react";
 import React, { createContext, useContext, useState } from "react";
 import { hightideLayers } from "./ReferensiHighTide";
 import { mslLayers } from "./ReferensiMSL";
@@ -31,6 +32,17 @@ export const MapProvider = ({ children }) => {
   const [activeUrl, setActiveUrl] = useState(null);
   const [activeLayers, setActiveLayers] = useState([]);
   const [pixelValue, setPixelValue] = useState(null);
+  const [currentYear, setCurrentYear] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const playIntervalRef = useRef(null);
+
+  // saat semua layer sudah dimatikan.
+  useEffect(() => {
+    const hasActiveLayer = layersState.some((layer) => layer.visible);
+    if (!hasActiveLayer) {
+      setPixelValue(null); // reset pixel kalau semua layer dimatikan
+    }
+  }, [layersState]);
 
   // === Fungsi khusus: load semua layer ReferensiHighTide (1975–2024) ===
   const loadHighTideLayers = () => {
@@ -227,6 +239,7 @@ export const MapProvider = ({ children }) => {
   // === Matikan semua layer ===
   const handleRemoveAll = () => {
     setLayersState((prev) => prev.map((layer) => ({ ...layer, visible: false })));
+    setPixelValue(null); // reset nilai pixel
   };
 
   // fungsi ganti menu peta
@@ -283,6 +296,59 @@ export const MapProvider = ({ children }) => {
     setLayersState(newLayers);
   };
 
+  // helper: tentukan range tahun sesuai submenu
+  const getYearRange = (submenu) => {
+    // submenu tertentu mulai dari 2007
+    const lateStart = ["Air Laut", "Skenario Banjir Q5", "Skenario Banjir Q25", "Skenario Banjir Q50", "Skenario Tanpa Tanggul", "Skenario Dengan Tanggul"];
+
+    if (lateStart.includes(submenu)) {
+      return { start: 2007, end: 2024 };
+    }
+    // default mulai dari 1975
+    return { start: 1975, end: 2024 };
+  };
+
+  const startPlay = () => {
+    if (!activeSubMenu) return;
+
+    const { start, end } = getYearRange(activeSubMenu);
+
+    setIsPlaying(true);
+
+    // Hanya set ke start jika currentYear belum ada atau sudah di luar range
+    setCurrentYear((prev) => {
+      if (!prev || prev < start || prev > end) return start;
+      return prev;
+    });
+
+    playIntervalRef.current = setInterval(() => {
+      setCurrentYear((prev) => {
+        if (prev >= end) {
+          clearInterval(playIntervalRef.current);
+          setIsPlaying(false);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 3000);
+  };
+
+  const stopPlay = () => {
+    clearInterval(playIntervalRef.current);
+    setIsPlaying(false);
+  };
+
+  useEffect(() => {
+    if (currentYear) {
+      setLayersState((prev) =>
+        prev.map((layer) => ({
+          ...layer,
+          visible: layer.id.endsWith(currentYear.toString()),
+        }))
+      );
+    }
+  }, [currentYear]);
+
   return (
     <MapContext.Provider
       value={{
@@ -301,6 +367,10 @@ export const MapProvider = ({ children }) => {
         setActiveMenu,
         activeSubMenu,
         setActiveSubMenu,
+        currentYear,
+        isPlaying,
+        startPlay,
+        stopPlay,
 
         // UI State
         showSidebar,

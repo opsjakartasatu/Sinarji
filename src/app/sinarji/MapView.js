@@ -9,7 +9,6 @@ import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
 import Expand from "@arcgis/core/widgets/Expand";
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import { useMapContext } from "./MapContext";
-import InformasiPeta from "./InformasiPeta";
 import "./style.css";
 
 const GEOSERVER_URL_ADMIN = "https://gis.dcktrp.id/gispublik/publik/Batas%20Administrasi%20Wilayah%20Jakarta/ows?service=WMS&version=1.3.0&request=GetCapabilities";
@@ -94,7 +93,6 @@ export default function MapViewComponent() {
   }, [layersState]);
 
   // Handler klik → GetFeatureInfo
-  // Handler klik → GetFeatureInfo
   useEffect(() => {
     if (!viewRef.current) return;
 
@@ -139,7 +137,6 @@ export default function MapViewComponent() {
 
   return (
     <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
-      <InformasiPeta />
       <Box ref={mapNodeRef} sx={{ width: "100%", height: "100%" }} />
     </Box>
   );

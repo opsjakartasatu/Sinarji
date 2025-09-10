@@ -34,6 +34,7 @@ for (let year = 1975; year <= 2024; year++) {
     id: `wtakuifertertekan2Layers-${year}`,
     name,
     title: `Akuifer Tertekan 2 - ${year}`,
+    year, // tambahin properti time series + scroll ke layer yang aktif
     opacity: 0.75,
     url,
   });
