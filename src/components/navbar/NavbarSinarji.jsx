@@ -9,9 +9,8 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import CustomImage from "../CustomImage";
 import "./style.css";
 import { useMapContext } from "@/app/sinarji/MapContext";
-import { url as highTideUrl, hightideLayers } from "@/app/sinarji/ReferensiHighTide";
 
-export default function Navbar({ isPlaying, togglePlay }) {
+export default function Navbar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("640"));
   const isMobile900 = useMediaQuery(theme.breakpoints.down("900"));
@@ -19,7 +18,7 @@ export default function Navbar({ isPlaying, togglePlay }) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState("");
-  const [openSubMenu, setOpenSubMenu] = useState(null); // simpan menu anak yang terbuka
+  const [openSubMenu, setOpenSubMenu] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -30,7 +29,8 @@ export default function Navbar({ isPlaying, togglePlay }) {
     setOpenSubMenu(null);
   };
 
-  const { handleSelectMenuLayers } = useMapContext();
+  // ambil state dari Context
+  const { handleSelectMenuLayers, activeSubMenu, isPlaying, startPlay, stopPlay } = useMapContext();
 
   const handleSelectMenu = (label) => {
     setSelectedMenu(label);
@@ -39,64 +39,14 @@ export default function Navbar({ isPlaying, togglePlay }) {
   };
 
   const menuItems = [
-    {
-      label: "Elevasi",
-      href: "#",
-      children: [
-        { label: "Referensi High Tide", href: "#" },
-        { label: "Referensi MSL", href: "#" },
-      ],
-    },
-    {
-      label: "Penurunan Tanah",
-      href: "#",
-      children: [
-        { label: "Laju", href: "#" },
-        { label: "Magnitude", href: "#" },
-      ],
-    },
-    {
-      label: "Water Table",
-      href: "#",
-      children: [
-        { label: "WT-Akuifer Tertekan 1", href: "#" },
-        { label: "WT-Akuifer Tertekan 2", href: "#" },
-      ],
-    },
-    {
-      label: "Akuifer",
-      href: "#",
-      children: [
-        { label: "Akuifer Tertekan 1", href: "#" },
-        { label: "Akuifer Tertekan 2", href: "#" },
-      ],
-    },
-    {
-      label: "Zonasi",
-      href: "#",
-      children: [
-        { label: "Zona Tertekan 1", href: "#" },
-        { label: "Zona Tertekan 2", href: "#" },
-      ],
-    },
-    { label: "Intrusi", href: "#", children: [{ label: "Air Laut", href: "#" }] },
-    {
-      label: "Banjir Fluvia",
-      href: "#",
-      children: [
-        { label: "Skenario Banjir Q5", href: "#" },
-        { label: "Skenario Banjir Q25", href: "#" },
-        { label: "Skenario Banjir Q50", href: "#" },
-      ],
-    },
-    {
-      label: "Banjir ROB",
-      href: "#",
-      children: [
-        { label: "Skenario Tanpa Tanggul", href: "#" },
-        { label: "Skenario Dengan Tanggul", href: "#" },
-      ],
-    },
+    { label: "Elevasi", children: [{ label: "Referensi High Tide" }, { label: "Referensi MSL" }] },
+    { label: "Penurunan Tanah", children: [{ label: "Laju" }, { label: "Magnitude" }] },
+    { label: "Water Table", children: [{ label: "WT-Akuifer Tertekan 1" }, { label: "WT-Akuifer Tertekan 2" }] },
+    { label: "Akuifer", children: [{ label: "Akuifer Tertekan 1" }, { label: "Akuifer Tertekan 2" }] },
+    { label: "Zonasi", children: [{ label: "Zona Tertekan 1" }, { label: "Zona Tertekan 2" }] },
+    { label: "Intrusi", children: [{ label: "Air Laut" }] },
+    { label: "Banjir Fluvia", children: [{ label: "Skenario Banjir Q5" }, { label: "Skenario Banjir Q25" }, { label: "Skenario Banjir Q50" }] },
+    { label: "Banjir ROB", children: [{ label: "Skenario Tanpa Tanggul" }, { label: "Skenario Dengan Tanggul" }] },
   ];
 
   return (
@@ -154,13 +104,19 @@ export default function Navbar({ isPlaying, togglePlay }) {
         Sistem Informasi Pengendalian Banjir Rob Pesisir Jakarta Indonesia
       </Typography>
 
-      {/* Play/Pause */}
+      {/* Play/Stop */}
       <Box
-        onClick={togglePlay}
+        onClick={() => {
+          if (activeSubMenu) {
+            isPlaying ? stopPlay() : startPlay();
+          }
+        }}
         sx={{
+          cursor: activeSubMenu ? "pointer" : "not-allowed",
+          opacity: activeSubMenu ? 1 : 0.5,
           display: "flex",
           alignItems: "center",
-          cursor: "pointer",
+          gap: "6px", // jarak teks & ikon
         }}
       >
         <Typography
@@ -168,31 +124,55 @@ export default function Navbar({ isPlaying, togglePlay }) {
             fontWeight: "500",
             fontFamily: "var(--font-family)",
             fontSize: "18px",
-            color: isPlaying ? "var(--jakartasatu-orange)" : "var(--jakartasatu-biru)",
+            color: isPlaying ? "var(--jakartasatu-orange)" : activeSubMenu ? "var(--jakartasatu-biru)" : "gray",
           }}
         >
-          {isPlaying ? "Stop Play" : "Play"}
+          {isPlaying ? "Stop" : "Play"}
         </Typography>
+
         {isPlaying ? (
           <Pause
             sx={{
-              fontSize: "34.2px",
-              color: isPlaying ? "var(--jakartasatu-orange)" : "var(--jakartasatu-biru)",
+              fontSize: "28px",
+              color: "var(--jakartasatu-orange)",
             }}
           />
         ) : (
           <PlayArrowRounded
             sx={{
-              fontSize: "34.2px",
-              color: isPlaying ? "var(--jakartasatu-orange)" : "var(--jakartasatu-biru)",
+              fontSize: "28px",
+              color: activeSubMenu ? "var(--jakartasatu-biru)" : "gray",
             }}
           />
         )}
       </Box>
 
+      {/* Compare */}
+      <Box sx={{ minWidth: "120px", textAlign: "right" }}>
+        <Box
+          onClick={() => window.alert("Fitur ini dalam pengembangan")}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: "500",
+              fontFamily: "var(--font-family)",
+              fontSize: "18px",
+              color: "var(--jakartasatu-biru)",
+            }}
+          >
+            Compare {"{}"}
+          </Typography>
+        </Box>
+      </Box>
+
       {/* Dropdown */}
-      <Box sx={{ minWidth: "200px", textAlign: "right" }}>
-        {/* Trigger */}
+      <Box sx={{ minWidth: "160px", textAlign: "right" }}>
         <Box
           onClick={handleClick}
           sx={{
@@ -292,25 +272,23 @@ export default function Navbar({ isPlaying, togglePlay }) {
                 <Collapse in={openSubMenu === idx} timeout="auto" unmountOnExit>
                   <Box
                     sx={{
-                      backgroundColor: "rgba(0,0,0,0.08)", // blok merah
-                      borderRadius: "10px", // radius biar melengkung
+                      backgroundColor: "rgba(0,0,0,0.08)",
+                      borderRadius: "10px",
                       mx: "auto",
                       mt: 1,
-                      width: "92%", // biar lebih rapih dari parent
-                      overflow: "hidden", // biar radius terpotong rapi
+                      width: "92%",
+                      overflow: "hidden",
                     }}
                   >
                     {item.children.map((child, cIdx) => (
                       <MenuItem
                         key={cIdx}
-                        onClick={() => handleSelectMenuLayers(item.label, child.label, child.url, child.layers)} // kirim dua argumen
+                        onClick={() => handleSelectMenuLayers(item.label, child.label, child.url, child.layers)}
                         sx={{
                           px: 3,
                           py: 1,
                           color: "navy",
-                          "&:hover": {
-                            backgroundColor: "rgba(255,255,255,0.6)", // efek hover putih transparan
-                          },
+                          "&:hover": { backgroundColor: "rgba(255,255,255,0.6)" },
                         }}
                       >
                         <Typography

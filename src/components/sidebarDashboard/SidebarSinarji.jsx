@@ -1,14 +1,38 @@
 "use client";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Box, Paper, CardContent, Typography, IconButton, Slider, Button, List, ListItem, ListItemIcon, ListItemText, Checkbox, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useMapContext } from "@/app/sinarji/MapContext";
+import InformasiPeta from "@/app/sinarji/InformasiPeta";
 import { FaBars, FaChevronLeft } from "react-icons/fa";
 
 export default function Sidebar() {
-  const { layersState, showSidebar, setShowSidebar, handleToggle, handleOpacityChange, handleToggleSettings, handleRemoveAll, activeMenu, activeSubMenu } = useMapContext();
+  const {
+    layersState,
+    showSidebar,
+    setShowSidebar,
+    handleToggle,
+    handleOpacityChange,
+    handleToggleSettings,
+    handleRemoveAll,
+    activeMenu,
+    activeSubMenu,
+    currentYear, // << ambil dari context
+  } = useMapContext();
+
+  const itemRefs = useRef({}); // simpan ref per layer
+
+  // Auto scroll ketika currentYear berubah
+  useEffect(() => {
+    if (currentYear && itemRefs.current[currentYear]) {
+      itemRefs.current[currentYear].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [currentYear]);
 
   return (
     <>
@@ -68,62 +92,68 @@ export default function Sidebar() {
             </Box>
 
             {/* Daftar layer */}
-            <Box sx={{ maxHeight: "20vh", overflowY: "auto", pr: 1 }}>
+            <Box sx={{ maxHeight: "15vh", overflowY: "auto", pr: 1 }}>
               <List disablePadding>
-                {layersState.map((layer, i) => (
-                  <Box key={`${layer.name}-${i}`} sx={{ mb: 1.5 }}>
-                    <ListItem
-                      disableGutters
-                      sx={{
-                        alignItems: "center",
-                        py: 0.5,
-                        display: "flex",
-                      }}
-                    >
-                      <ListItemIcon sx={{ minWidth: 36 }}>
-                        <Checkbox size="small" checked={!!layer.visible} onChange={() => handleToggle(i)} />
-                      </ListItemIcon>
+                {layersState.map((layer, i) => {
+                  // misal layer punya properti year untuk dicocokkan dengan currentYear
+                  const isActive = currentYear === layer.year;
 
-                      <Tooltip title={layer.title}>
-                        <ListItemText
-                          primary={layer.title}
-                          primaryTypographyProps={{
-                            noWrap: true,
-                            sx: { fontSize: 13, fontWeight: 600 },
-                          }}
-                        />
-                      </Tooltip>
-
-                      <IconButton size="small" onClick={() => handleToggleSettings(i)} sx={{ ml: 1 }}>
-                        <MoreVertIcon fontSize="small" />
-                      </IconButton>
-                    </ListItem>
-
-                    {/* Slider opacity */}
-                    {layer.showSettings && layer.visible && (
-                      <Box
+                  return (
+                    <Box key={`${layer.name}-${i}`} ref={(el) => (itemRefs.current[layer.year] = el)}>
+                      <ListItem
+                        disableGutters
                         sx={{
-                          display: "flex",
                           alignItems: "center",
-                          gap: 1,
-                          px: 2,
-                          mt: 0.5,
+                          py: 0,
+                          display: "flex",
+                          minHeight: 28,
+                          bgcolor: isActive
+                            ? "rgba(13,71,161,0.1)" // highlight
+                            : "transparent",
                         }}
                       >
-                        <VisibilityOffIcon sx={{ fontSize: 18, opacity: 0.7 }} />
-                        <Slider
-                          value={Math.round((layer.opacity ?? 1) * 100)} // 0–1 → 0–100 utk UI
-                          min={0}
-                          max={100}
-                          step={1}
-                          onChange={(_, v) => handleOpacityChange(i, Array.isArray(v) ? v[0] : v)}
-                          sx={{ flex: 1 }}
-                        />
-                        <VisibilityIcon sx={{ fontSize: 18, opacity: 0.7 }} />
-                      </Box>
-                    )}
-                  </Box>
-                ))}
+                        <ListItemIcon sx={{ minWidth: 32 }}>
+                          <Checkbox size="small" checked={!!layer.visible} onChange={() => handleToggle(i)} />
+                        </ListItemIcon>
+
+                        <Tooltip title={layer.title}>
+                          <ListItemText
+                            primary={layer.title}
+                            primaryTypographyProps={{
+                              noWrap: true,
+                              sx: {
+                                fontSize: 12.5,
+                                fontWeight: 600,
+                                color: isActive ? "var(--jakartasatu-orange)" : "inherit",
+                              },
+                            }}
+                          />
+                        </Tooltip>
+
+                        <IconButton size="small" onClick={() => handleToggleSettings(i)} sx={{ ml: 0.5 }}>
+                          <MoreVertIcon fontSize="small" />
+                        </IconButton>
+                      </ListItem>
+
+                      {/* Slider opacity */}
+                      {layer.showSettings && layer.visible && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            px: 2,
+                            mt: 0.5,
+                          }}
+                        >
+                          <VisibilityOffIcon sx={{ fontSize: 18, opacity: 0.7 }} />
+                          <Slider value={Math.round((layer.opacity ?? 1) * 100)} min={0} max={100} step={1} onChange={(_, v) => handleOpacityChange(i, Array.isArray(v) ? v[0] : v)} sx={{ flex: 1 }} />
+                          <VisibilityIcon sx={{ fontSize: 18, opacity: 0.7 }} />
+                        </Box>
+                      )}
+                    </Box>
+                  );
+                })}
               </List>
             </Box>
 
@@ -134,7 +164,7 @@ export default function Sidebar() {
               color="error"
               onClick={handleRemoveAll}
               sx={{
-                mt: 2,
+                mt: 1,
                 borderRadius: 2,
                 fontWeight: 700,
                 textTransform: "none",
@@ -143,6 +173,11 @@ export default function Sidebar() {
             >
               Hapus Semua
             </Button>
+
+            {/* Informasi Peta di bawah */}
+            <Box sx={{ mt: 2 }}>
+              <InformasiPeta />
+            </Box>
           </CardContent>
         </Paper>
       )}
