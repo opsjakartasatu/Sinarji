@@ -1,48 +1,95 @@
 "use client";
 import React, { useRef, useEffect } from "react";
-import { Box, Paper, CardContent, Typography, IconButton, Slider, Button, List, ListItem, ListItemIcon, ListItemText, Checkbox, Tooltip } from "@mui/material";
+import { Box, Paper, CardContent, Typography, IconButton, Slider, Button, List, ListItem, ListItemIcon, ListItemText, Checkbox } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useMapContext } from "@/app/sinarji/MapContext";
-import InformasiPeta from "@/app/sinarji/InformasiPeta";
-import { FaBars, FaChevronLeft } from "react-icons/fa";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import { FaBars } from "react-icons/fa";
 
-export default function Sidebar() {
+export default function Sidebar({ target = "main" }) {
   const {
     layersState,
+    setLayersState,
+    layersStateLeft,
+    setLayersStateLeft,
+    layersStateRight,
+    setLayersStateRight,
     showSidebar,
     setShowSidebar,
-    handleToggle,
-    handleOpacityChange,
+    handleSelectMenuLayers,
     handleToggleSettings,
-    handleRemoveAll,
+    handleOpacityChange,
     activeMenu,
     activeSubMenu,
-    currentYear, // << ambil dari context
+    currentYear,
   } = useMapContext();
 
-  const itemRefs = useRef({}); // simpan ref per layer
+  // pilih state sesuai target
+  let currentLayers = layersState;
+  let setCurrentLayers = setLayersState;
+  if (target === "left") {
+    currentLayers = layersStateLeft;
+    setCurrentLayers = setLayersStateLeft;
+  } else if (target === "right") {
+    currentLayers = layersStateRight;
+    setCurrentLayers = setLayersStateRight;
+  }
 
-  // Auto scroll ketika currentYear berubah
+  const itemRefs = useRef({});
+  const listRef = useRef(null);
+
+  const lastMenuRef = useRef(null);
+  const lastSubMenuRef = useRef(null);
+
+  // Auto scroll highlight currentYear hanya untuk main
   useEffect(() => {
-    if (currentYear && itemRefs.current[currentYear]) {
+    if (target === "main" && currentYear && itemRefs.current[currentYear]) {
       itemRefs.current[currentYear].scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
     }
-  }, [currentYear]);
+  }, [currentYear, target]);
+
+  // Auto panggil handleSelectMenuLayers saat submenu berubah
+  useEffect(() => {
+    if (activeMenu && activeSubMenu && (lastMenuRef.current !== activeMenu || lastSubMenuRef.current !== activeSubMenu)) {
+      // hanya jalan kalau submenu/menu berbeda dari sebelumnya
+      handleSelectMenuLayers(activeMenu, activeSubMenu, target);
+
+      // update cache
+      lastMenuRef.current = activeMenu;
+      lastSubMenuRef.current = activeSubMenu;
+    }
+  }, [activeMenu, activeSubMenu, target]);
+
+  // Reset scroll saat submenu berubah (khusus main)
+  useEffect(() => {
+    if (target === "main" && listRef.current) {
+      listRef.current.scrollTo({ top: 0, behavior: "auto" });
+    }
+  }, [activeMenu, activeSubMenu, target]);
+
+  const handleToggle = (idx) => {
+    setCurrentLayers((prev) => prev.map((layer, i) => (i === idx ? { ...layer, visible: !layer.visible } : layer)));
+  };
+
+  const handleRemoveAll = () => {
+    setCurrentLayers((prev) => prev.map((layer) => ({ ...layer, visible: false })));
+  };
 
   return (
     <>
-      {/* Tombol toggle */}
+      {/* Tombol toggle sidebar */}
       <IconButton
         onClick={() => setShowSidebar((s) => !s)}
         sx={{
           position: "absolute",
-          top: 90,
-          left: 35,
+          top: 145,
+          left: target === "right" ? "auto" : 35,
+          right: target === "right" ? 35 : "auto",
           zIndex: 2,
           bgcolor: "#0d47a1",
           color: "white",
@@ -50,21 +97,23 @@ export default function Sidebar() {
           height: 40,
           borderRadius: 1.5,
           boxShadow: 3,
-          transition: "left 0.3s ease",
+          transition: "all 0.3s ease",
           "&:hover": { bgcolor: "#0b3a8f" },
         }}
       >
-        {showSidebar ? <FaChevronLeft /> : <FaBars />}
+        {showSidebar ? <MenuOpenIcon /> : <FaBars />}
       </IconButton>
 
       {/* Sidebar */}
       {showSidebar && (
         <Paper
           elevation={8}
+          data-sidebar={target}
           sx={{
             position: "absolute",
-            top: 135,
-            left: 35,
+            top: 145,
+            left: target === "right" ? "auto" : 80,
+            right: target === "right" ? 80 : "auto",
             zIndex: 2,
             width: 300,
             borderRadius: 3,
@@ -87,65 +136,35 @@ export default function Sidebar() {
               }}
             >
               <Typography variant="subtitle10" sx={{ fontWeight: 800 }}>
-                {activeMenu && activeSubMenu ? `Daftar Layer ${activeMenu} - ${activeSubMenu}` : "Daftar Layer"}
+                {target === "left" ? "Daftar Layer Kiri" : target === "right" ? "Daftar Layer Kanan" : activeMenu && activeSubMenu ? `Daftar Layer ${activeMenu} - ${activeSubMenu}` : "Daftar Layer"}
               </Typography>
             </Box>
 
             {/* Daftar layer */}
-            <Box sx={{ maxHeight: "15vh", overflowY: "auto", pr: 1 }}>
+            <Box id="layer-list-container" ref={listRef} sx={{ maxHeight: "20vh", overflowY: "auto", pr: 1 }}>
               <List disablePadding>
-                {layersState.map((layer, i) => {
-                  // misal layer punya properti year untuk dicocokkan dengan currentYear
-                  const isActive = currentYear === layer.year;
-
+                {currentLayers.map((layer, i) => {
+                  const isActive = target === "main" && currentYear === layer.year;
                   return (
-                    <Box key={`${layer.name}-${i}`} ref={(el) => (itemRefs.current[layer.year] = el)}>
-                      <ListItem
-                        disableGutters
-                        sx={{
-                          alignItems: "center",
-                          py: 0,
-                          display: "flex",
-                          minHeight: 28,
-                          bgcolor: isActive
-                            ? "rgba(13,71,161,0.1)" // highlight
-                            : "transparent",
-                        }}
-                      >
+                    <Box key={`${layer.name}-${i}`} ref={(el) => (el ? (itemRefs.current[layer.year] = el) : null)}>
+                      <ListItem disableGutters sx={{ alignItems: "center", py: 0, display: "flex", minHeight: 28 }}>
                         <ListItemIcon sx={{ minWidth: 32 }}>
                           <Checkbox size="small" checked={!!layer.visible} onChange={() => handleToggle(i)} />
                         </ListItemIcon>
-
-                        <Tooltip title={layer.title}>
-                          <ListItemText
-                            primary={layer.title}
-                            primaryTypographyProps={{
-                              noWrap: true,
-                              sx: {
-                                fontSize: 12.5,
-                                fontWeight: 600,
-                                color: isActive ? "var(--jakartasatu-orange)" : "inherit",
-                              },
-                            }}
-                          />
-                        </Tooltip>
-
+                        <ListItemText
+                          primary={layer.title}
+                          primaryTypographyProps={{
+                            noWrap: true,
+                            sx: { fontSize: 12.5, fontWeight: 600, color: isActive ? "var(--jakartasatu-orange)" : "inherit" },
+                          }}
+                        />
                         <IconButton size="small" onClick={() => handleToggleSettings(i)} sx={{ ml: 0.5 }}>
                           <MoreVertIcon fontSize="small" />
                         </IconButton>
                       </ListItem>
 
-                      {/* Slider opacity */}
                       {layer.showSettings && layer.visible && (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            px: 2,
-                            mt: 0.5,
-                          }}
-                        >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 2, mt: 0.5 }}>
                           <VisibilityOffIcon sx={{ fontSize: 18, opacity: 0.7 }} />
                           <Slider value={Math.round((layer.opacity ?? 1) * 100)} min={0} max={100} step={1} onChange={(_, v) => handleOpacityChange(i, Array.isArray(v) ? v[0] : v)} sx={{ flex: 1 }} />
                           <VisibilityIcon sx={{ fontSize: 18, opacity: 0.7 }} />
@@ -158,26 +177,14 @@ export default function Sidebar() {
             </Box>
 
             {/* Tombol hapus semua */}
-            <Button
-              fullWidth
-              variant="contained"
-              color="error"
-              onClick={handleRemoveAll}
-              sx={{
-                mt: 1,
-                borderRadius: 2,
-                fontWeight: 700,
-                textTransform: "none",
-                fontSize: 15,
-              }}
-            >
+            <Button fullWidth variant="contained" color="error" onClick={handleRemoveAll} disabled={currentLayers.filter((l) => l.visible).length <= 1} sx={{ mt: 1, borderRadius: 2, fontWeight: 700, textTransform: "none", fontSize: 15 }}>
               Hapus Semua
             </Button>
 
-            {/* Informasi Peta di bawah */}
-            <Box sx={{ mt: 2 }}>
+            {/* Informasi Peta */}
+            {/* <Box sx={{ mt: 2 }}>
               <InformasiPeta />
-            </Box>
+            </Box> */}
           </CardContent>
         </Paper>
       )}

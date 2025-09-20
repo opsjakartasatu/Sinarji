@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Box, Typography, useMediaQuery, useTheme, Menu, MenuItem, Collapse } from "@mui/material";
 import Link from "next/link";
-import { PlayArrowRounded, Pause } from "@mui/icons-material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import CustomImage from "../CustomImage";
@@ -19,6 +18,8 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState("");
   const [openSubMenu, setOpenSubMenu] = useState(null);
+  const { isCompareMode, setIsCompareMode } = useMapContext();
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -104,53 +105,10 @@ export default function Navbar() {
         Sistem Informasi Pengendalian Banjir Rob Pesisir Jakarta Indonesia
       </Typography>
 
-      {/* Play/Stop */}
-      <Box
-        onClick={() => {
-          if (activeSubMenu) {
-            isPlaying ? stopPlay() : startPlay();
-          }
-        }}
-        sx={{
-          cursor: activeSubMenu ? "pointer" : "not-allowed",
-          opacity: activeSubMenu ? 1 : 0.5,
-          display: "flex",
-          alignItems: "center",
-          gap: "6px", // jarak teks & ikon
-        }}
-      >
-        <Typography
-          sx={{
-            fontWeight: "500",
-            fontFamily: "var(--font-family)",
-            fontSize: "18px",
-            color: isPlaying ? "var(--jakartasatu-orange)" : activeSubMenu ? "var(--jakartasatu-biru)" : "gray",
-          }}
-        >
-          {isPlaying ? "Stop" : "Play"}
-        </Typography>
-
-        {isPlaying ? (
-          <Pause
-            sx={{
-              fontSize: "28px",
-              color: "var(--jakartasatu-orange)",
-            }}
-          />
-        ) : (
-          <PlayArrowRounded
-            sx={{
-              fontSize: "28px",
-              color: activeSubMenu ? "var(--jakartasatu-biru)" : "gray",
-            }}
-          />
-        )}
-      </Box>
-
       {/* Compare */}
       <Box sx={{ minWidth: "120px", textAlign: "right" }}>
         <Box
-          onClick={() => window.alert("Fitur ini dalam pengembangan")}
+          onClick={() => setIsCompareMode((prev) => !prev)}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -166,7 +124,7 @@ export default function Navbar() {
               color: "var(--jakartasatu-biru)",
             }}
           >
-            Compare {"{}"}
+            {isCompareMode ? "Exit Compare" : "Compare {}"}
           </Typography>
         </Box>
       </Box>
