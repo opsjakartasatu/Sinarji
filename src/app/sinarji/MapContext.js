@@ -24,7 +24,7 @@ import {
 export const MapContext = createContext();
 export const useMapContext = () => useContext(MapContext);
 
-// === Cache layer supaya tidak selalu trigger GetCapabilities ===
+// Cache layer supaya tidak selalu trigger GetCapabilities
 const layerInstanceCache = {};
 const getOrCreateWMSLayer = (l) => {
   if (layerInstanceCache[l.id]) {
@@ -115,13 +115,13 @@ export const MapProvider = ({ children }) => {
     }
   };
 
-  // === Ubah opacity (0–100 → 0–1) ===
+  // Ubah opacity (0–100 → 0–1)
   const handleOpacityChange = (idx, percent) => {
     const p = Array.isArray(percent) ? percent[0] : percent;
     setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, opacity: p / 100 } : layer)));
   };
 
-  // === Toggle panel setting layer ===
+  // Toggle panel setting layer
   const handleToggleSettings = (idx) => {
     setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, showSettings: !layer.showSettings } : layer)));
   };
@@ -214,7 +214,7 @@ export const MapProvider = ({ children }) => {
     }
   };
 
-  // === Fungsi play/pause/resume/stop ===
+  // Fungsi play/pause/resume/stop
   const getYearRange = (submenu) => {
     const lateStart = ["Air Laut", "Skenario Banjir Q5", "Skenario Banjir Q25", "Skenario Banjir Q50", "Skenario Tanpa Tanggul", "Skenario Dengan Tanggul"];
     return lateStart.includes(submenu) ? { start: 1975, end: 2024 } : { start: 2000, end: 2024 };
@@ -277,7 +277,7 @@ export const MapProvider = ({ children }) => {
     setIsPlaying(false);
     setIsPaused(false);
   };
-  // === akhir fungsi play ===
+  // akhir fungsi play
 
   useEffect(() => {
     if (!map) return;

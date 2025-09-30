@@ -1,4 +1,5 @@
 const legends = {
+  // Simbologi Menu dan Sub-menu
   Elevasi: {
     "Referensi High Tide": [
       { title: "Di bawah laut", gradient: "linear-gradient(to right, #0995FC, #052943)" },

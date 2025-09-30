@@ -50,7 +50,7 @@ export default function Navbar() {
     { label: "Banjir ROB", children: [{ label: "Skenario Tanpa Tanggul" }, { label: "Skenario Dengan Tanggul" }] },
   ];
 
-  // === Drawer untuk mobile ===
+  // Drawer untuk mobile
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

@@ -1,6 +1,6 @@
 const url = "https://sinarji-geo.dsdajakarta.id/geoserver/fews/wms?";
 
-// === Default WMS Options ===
+// Default WMS Options
 const defaultWMSOpts = {
   version: "1.1.1",
   spatialReference: { wkid: 32748 }, // sesuai XML
@@ -32,7 +32,7 @@ function generateLayers(prefix, nameFn, titleFn, start, end, opts = {}) {
   return layers;
 }
 
-// === Interval Helper ===
+// Interval Helper
 const akuiferIntervals = [
   { start: 1975, end: 1979, base: 1975 },
   { start: 1980, end: 1984, base: 1980 },
@@ -61,7 +61,7 @@ function getLajuLayerName(year) {
   return interval ? interval.name : null;
 }
 
-// === Layer Tahunan ===
+// Layer Tahunan
 const hightideLayers = generateLayers(
   "hightide",
   (year) => `DTM_tanpa_tanggul_HighTide_SLR_${year}`,

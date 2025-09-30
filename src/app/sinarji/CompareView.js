@@ -25,7 +25,7 @@ export default function CompareView() {
   useEffect(() => {
     if (!isCompareMode) return;
 
-    // --- Map Left
+    // Map Left
     const mapLeft = new Map({ basemap: "satellite" });
     mapLeftRef.current = mapLeft;
     setMapLeft(mapLeft);
@@ -40,7 +40,7 @@ export default function CompareView() {
     setViewLeft(mvLeft);
     mvLeft.ui.add(new Zoom({ view: mvLeft }), "bottom-right");
 
-    // --- Map Right
+    // Map Right
     const mapRight = new Map({ basemap: "satellite" });
     mapRightRef.current = mapRight;
     setMapRight(mapRight);
@@ -55,7 +55,7 @@ export default function CompareView() {
     setViewRight(mvRight);
     mvRight.ui.add(new Zoom({ view: mvRight }), "bottom-left");
 
-    // --- Admin Layers
+    // Admin Layers
     const adminLayerLeft = new WMSLayer({
       id: "batas-admin",
       url: GEOSERVER_URL_ADMIN,
@@ -74,7 +74,7 @@ export default function CompareView() {
     });
     mapRight.add(adminLayerRight);
 
-    // === Sync view
+    // Sync view
     function syncViews(view1, view2) {
       let timeout;
       const stopWatch = reactiveUtils.watch(
@@ -106,7 +106,7 @@ export default function CompareView() {
     };
   }, [isCompareMode, setMapLeft, setViewLeft, setMapRight, setViewRight]);
 
-  // === Sync layers & add raster layer clickable
+  // Sync layers & add raster layer clickable
   const syncLayers = (layersState, mapRef) => {
     if (!mapRef.current) return;
 
@@ -139,7 +139,7 @@ export default function CompareView() {
   useEffect(() => syncLayers(layersStateLeft, mapLeftRef), [layersStateLeft]);
   useEffect(() => syncLayers(layersStateRight, mapRightRef), [layersStateRight]);
 
-  // === GetFeatureInfo LEFT
+  // GetFeatureInfo LEFT
   useEffect(() => {
     if (!viewLeft) return;
 
@@ -199,7 +199,7 @@ export default function CompareView() {
     return () => handler && handler.remove();
   }, [layersStateLeft, setPixelValueLeft, viewLeft]);
 
-  // === GetFeatureInfo RIGHT
+  // GetFeatureInfo RIGHT
   useEffect(() => {
     if (!viewRight) return;
 

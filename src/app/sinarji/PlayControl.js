@@ -5,7 +5,7 @@ import { Stack, Box, Paper, Typography, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import StopIcon from "@mui/icons-material/Stop";
-import ReplayIcon from "@mui/icons-material/Replay"; // untuk resume
+import ReplayIcon from "@mui/icons-material/Replay";
 
 export default function PlayControl() {
   const { activeSubMenu, isPlaying, startPlay, stopPlay, pausePlay, resumePlay, isPaused } = useContext(MapContext);

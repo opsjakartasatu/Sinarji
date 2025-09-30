@@ -7,14 +7,14 @@ import Sidebar from "@/components/sidebarDashboard/SidebarSinarji";
 import Navbar from "@/components/navbar/NavbarSinarji";
 import PlayControl from "./PlayControl";
 import CompareView from "./CompareView";
-import InformasiPeta from "./InformasiPeta"; // 🔹 import komponen baru
+import InformasiPeta from "./InformasiPeta";
 
 const MapView = dynamic(() => import("./MapView"), { ssr: false });
 
 function MainContent() {
   const { isCompareMode } = useMapContext();
 
-  // 🔹 State untuk handle sidebar
+  // State untuk handle sidebar
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const sidebarWidth = sidebarOpen ? 320 : 64; // sesuaikan dengan ukuran sidebar kamu
 
