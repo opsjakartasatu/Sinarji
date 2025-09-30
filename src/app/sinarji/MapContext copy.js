@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useRef, useEffect } from "react";
+// import * as reactiveUtils from "@arcgis/core/core/reactiveUtils";
 import WMSLayer from "@arcgis/core/layers/WMSLayer";
 
 import {
@@ -24,24 +25,6 @@ import {
 export const MapContext = createContext();
 export const useMapContext = () => useContext(MapContext);
 
-// === Cache layer supaya tidak selalu trigger GetCapabilities ===
-const layerInstanceCache = {};
-const getOrCreateWMSLayer = (l) => {
-  if (layerInstanceCache[l.id]) {
-    return layerInstanceCache[l.id];
-  }
-  const instance = new WMSLayer({
-    url: l.url,
-    sublayers: [{ name: l.name }],
-    id: l.id,
-    title: l.title,
-    opacity: l.opacity ?? 1,
-    visible: l.visible ?? false,
-  });
-  layerInstanceCache[l.id] = instance;
-  return instance;
-};
-
 export const MapProvider = ({ children }) => {
   const [map, setMap] = useState(null);
   const [view, setView] = useState(null);
@@ -54,7 +37,6 @@ export const MapProvider = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(true);
   const [pixelValue, setPixelValue] = useState(null);
   const [multiActive, setMultiActive] = useState(false);
-
   const [isCompareMode, setIsCompareMode] = useState(false);
   const [mapLeft, setMapLeft] = useState(null);
   const [viewLeft, setViewLeft] = useState(null);
@@ -71,11 +53,41 @@ export const MapProvider = ({ children }) => {
 
   const playIntervalRef = useRef(null);
 
+  // Reset pixel jika semua layer mati
   useEffect(() => {
     const hasActiveLayer = layersState.some((l) => l.visible);
     if (!hasActiveLayer) setPixelValue(null);
   }, [layersState]);
 
+  // Toggle layer utama
+  const handleToggle = (idx) => {
+    setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, visible: !layer.visible } : layer)));
+  };
+
+  const handleToggleLeft = (idx) => {
+    setLayersStateLeft((prev) => prev.map((layer, i) => (i === idx ? { ...layer, visible: !layer.visible } : layer)));
+  };
+
+  const handleToggleRight = (idx) => {
+    setLayersStateRight((prev) => prev.map((layer, i) => (i === idx ? { ...layer, visible: !layer.visible } : layer)));
+  };
+
+  const handleOpacityChange = (idx, percent) => {
+    const p = Array.isArray(percent) ? percent[0] : percent;
+    setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, opacity: p / 100 } : layer)));
+  };
+
+  const handleToggleSettings = (idx) => {
+    setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, showSettings: !layer.showSettings } : layer)));
+  };
+
+  const handleRemoveAll = () => {
+    setLayersState((prev) => prev.map((layer) => ({ ...layer, visible: false })));
+    setPixelValue(null);
+  };
+
+  // Fungsi aman untuk select menu layers
+  // === helper untuk ambil layer sesuai submenu ===
   const getLayersForSubmenu = (parentLabel, childLabel) => {
     switch (childLabel) {
       case "Referensi High Tide":
@@ -115,54 +127,31 @@ export const MapProvider = ({ children }) => {
     }
   };
 
-  // === Ubah opacity (0–100 → 0–1) ===
-  const handleOpacityChange = (idx, percent) => {
-    const p = Array.isArray(percent) ? percent[0] : percent;
-    setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, opacity: p / 100 } : layer)));
-  };
-
-  // === Toggle panel setting layer ===
-  const handleToggleSettings = (idx) => {
-    setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, showSettings: !layer.showSettings } : layer)));
-  };
-
-  const handleToggle = (idx) => {
-    setLayersState((prev) => prev.map((layer, i) => (i === idx ? { ...layer, visible: !layer.visible } : layer)));
-  };
-
-  const handleToggleLeft = (idx) => {
-    setLayersStateLeft((prev) => prev.map((layer, i) => (i === idx ? { ...layer, visible: !layer.visible } : layer)));
-  };
-
-  const handleToggleRight = (idx) => {
-    setLayersStateRight((prev) => prev.map((layer, i) => (i === idx ? { ...layer, visible: !layer.visible } : layer)));
-  };
-
+  // Helper aman untuk tambah layer
   const addLayerSafely = async (mapTarget, layer) => {
     try {
       if (!layer || !layer.instance) return;
+
+      // tunggu layer load
       if (layer.instance.load) {
         await layer.instance.load();
       }
+
+      // tambahkan hanya kalau belum ada
       if (!mapTarget.findLayerById(layer.instance.id)) {
         mapTarget.add(layer.instance);
       }
+
+      console.log("Layer ditambahkan:", layer.instance.id);
     } catch (err) {
       console.warn("Gagal tambah layer:", layer.id, err);
     }
   };
 
+  // === Fungsi utama untuk ganti submenu ===
   const handleSelectMenuLayers = (parentLabel, childLabel = null, target = "main") => {
-    if (target === "left") {
-      setActiveMenuLeft(parentLabel);
-      setActiveSubMenuLeft(childLabel);
-    } else if (target === "right") {
-      setActiveMenuRight(parentLabel);
-      setActiveSubMenuRight(childLabel);
-    } else {
-      setActiveMenu(parentLabel);
-      setActiveSubMenu(childLabel);
-    }
+    setActiveMenu(parentLabel);
+    setActiveSubMenu(childLabel);
 
     let mapTarget = map;
     let setState = setLayersState;
@@ -179,14 +168,24 @@ export const MapProvider = ({ children }) => {
 
     if (!mapTarget) return;
 
+    // clear semua layer kecuali Batas Admin
     const keepLayers = mapTarget.layers.filter((lyr) => lyr.id === "batas-admin");
     mapTarget.removeAll();
     keepLayers.forEach((lyr) => mapTarget.add(lyr));
 
     const newLayers = getLayersForSubmenu(parentLabel, childLabel);
 
+    // build WMSLayer instances
     const layersPrepared = newLayers.map((l) => {
-      const instance = getOrCreateWMSLayer(l); //pakai cache
+      const instance = new WMSLayer({
+        url: l.url,
+        sublayers: [{ name: l.name }],
+        id: l.id,
+        title: l.title,
+        opacity: l.opacity ?? 1,
+        visible: l.visible ?? false, // start hidden
+      });
+
       return {
         ...l,
         visible: l.visible ?? false,
@@ -197,24 +196,24 @@ export const MapProvider = ({ children }) => {
 
     setState(layersPrepared);
 
+    // tambahkan ke map
     layersPrepared.forEach((layer) => {
-      addLayerSafely(mapTarget, layer);
+      addLayerSafely(layer, mapTarget);
     });
 
     setCurrentYear(null);
     setIsPlaying(false);
     setIsPaused(false);
-
-    if (target === "left") {
-      setPixelValueLeft(null);
-    } else if (target === "right") {
-      setPixelValueRight(null);
-    } else {
-      setPixelValue(null);
-    }
   };
 
-  // === Fungsi play/pause/resume/stop ===
+  const handleCheckboxChange = (layerId, checked) => {
+    setLayersState((prev) => {
+      const updated = prev.map((layer) => (layer.id === layerId ? { ...layer, checked } : layer));
+      setMultiActive(updated.filter((l) => l.checked).length > 1);
+      return updated;
+    });
+  };
+
   const getYearRange = (submenu) => {
     const lateStart = ["Air Laut", "Skenario Banjir Q5", "Skenario Banjir Q25", "Skenario Banjir Q50", "Skenario Tanpa Tanggul", "Skenario Dengan Tanggul"];
     return lateStart.includes(submenu) ? { start: 1975, end: 2024 } : { start: 2000, end: 2024 };
@@ -277,8 +276,8 @@ export const MapProvider = ({ children }) => {
     setIsPlaying(false);
     setIsPaused(false);
   };
-  // === akhir fungsi play ===
 
+  // Sync map layer dengan state
   useEffect(() => {
     if (!map) return;
     layersState.forEach((layer) => {
@@ -291,35 +290,9 @@ export const MapProvider = ({ children }) => {
   }, [layersState, map]);
 
   useEffect(() => {
-    if (!mapLeft) return;
-    layersStateLeft.forEach((layer) => {
-      const mapLayer = mapLeft.findLayerById(layer.id);
-      if (mapLayer) {
-        mapLayer.visible = layer.visible;
-        mapLayer.opacity = layer.opacity ?? 1;
-      }
-    });
-  }, [layersStateLeft, mapLeft]);
-
-  useEffect(() => {
-    if (!mapRight) return;
-    layersStateRight.forEach((layer) => {
-      const mapLayer = mapRight.findLayerById(layer.id);
-      if (mapLayer) {
-        mapLayer.visible = layer.visible;
-        mapLayer.opacity = layer.opacity ?? 1;
-      }
-    });
-  }, [layersStateRight, mapRight]);
-
-  useEffect(() => {
     if (isCompareMode) {
-      if (layersStateLeft.length === 0) {
-        setLayersStateLeft(layersState.map((l) => ({ ...l, showSettings: false })));
-      }
-      if (layersStateRight.length === 0) {
-        setLayersStateRight(layersState.map((l) => ({ ...l, showSettings: false })));
-      }
+      if (layersStateLeft.length === 0) setLayersStateLeft(layersState.map((l) => ({ ...l, visible: false, showSettings: false })));
+      if (layersStateRight.length === 0) setLayersStateRight(layersState.map((l) => ({ ...l, visible: false, showSettings: false })));
     }
   }, [isCompareMode, layersState]);
 
@@ -347,7 +320,14 @@ export const MapProvider = ({ children }) => {
         setShowSidebar,
         pixelValue,
         setPixelValue,
+        handleToggle,
+        handleToggleLeft,
+        handleToggleRight,
+        handleOpacityChange,
+        handleToggleSettings,
+        handleRemoveAll,
         handleSelectMenuLayers,
+        multiActive,
         isCompareMode,
         setIsCompareMode,
         mapLeft,
@@ -374,11 +354,6 @@ export const MapProvider = ({ children }) => {
         setActiveMenuRight,
         activeSubMenuRight,
         setActiveSubMenuRight,
-        handleToggle,
-        handleToggleLeft,
-        handleToggleRight,
-        handleOpacityChange,
-        handleToggleSettings,
       }}
     >
       {children}

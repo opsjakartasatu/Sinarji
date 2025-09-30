@@ -1,49 +1,40 @@
 "use client";
 import React, { useState } from "react";
-import { Box, Paper, CardContent, Typography, IconButton } from "@mui/material";
+import { Box, Paper, CardContent, useTheme, useMediaQuery, Typography, IconButton } from "@mui/material";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { useMapContext } from "./MapContext";
 import legends from "./LegendaConfig";
 
-export default function InformasiPeta({ target = "main", position = "left" }) {
-  const {
-    // global
-    activeMenu,
-    activeSubMenu,
-    pixelValue,
-    // left
-    activeMenuLeft,
-    activeSubMenuLeft,
-    pixelValueLeft,
-    // right
-    activeMenuRight,
-    activeSubMenuRight,
-    pixelValueRight,
-  } = useMapContext();
+export default function InformasiPeta({ position = "left", target = "main" }) {
+  const { pixelValue, pixelValueLeft, pixelValueRight, activeMenu, activeSubMenu, activeMenuLeft, activeSubMenuLeft, activeMenuRight, activeSubMenuRight } = useMapContext();
 
-  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down(640)); // HP kecil
+  const isTablet = useMediaQuery(theme.breakpoints.down(1366)); // Tablet
 
-  // pick per-target state
-  const menu = target === "left" ? activeMenuLeft : target === "right" ? activeMenuRight : activeMenu;
-  const subMenu = target === "left" ? activeSubMenuLeft : target === "right" ? activeSubMenuRight : activeSubMenu;
-  const pixel = target === "left" ? pixelValueLeft : target === "right" ? pixelValueRight : pixelValue;
+  // tentukan pixel & legend sesuai target
+  let pixel = pixelValue;
+  let menu = activeMenu;
+  let submenu = activeSubMenu;
 
-  const menuLegends = menu && subMenu ? legends[menu]?.[subMenu] || [] : [];
+  if (target === "left") {
+    pixel = pixelValueLeft;
+    menu = activeMenuLeft;
+    submenu = activeSubMenuLeft;
+  } else if (target === "right") {
+    pixel = pixelValueRight;
+    menu = activeMenuRight;
+    submenu = activeSubMenuRight;
+  }
 
-  // parsing GRAY_INDEX like sebelumnya
+  const menuLegends = legends[menu]?.[submenu] || [];
+  const [open, setOpen] = useState(false); // langsung terbuka
+
   const renderPixelText = () => {
-    if (!subMenu) return "Pilih menu untuk menampilkan informasi peta";
-    if (!pixel) return "Nilai: *klik peta untuk menampilkan nilai";
-    try {
-      const match = pixel.match(/GRAY_INDEX\s*=\s*([0-9\.\-eE]+)/);
-      if (match) return `Nilai: ${parseFloat(match[1]).toFixed(4)}`;
-      // fallback: show first number found
-      const numMatch = pixel.match(/([-+]?\d*\.\d+|\d+)/);
-      if (numMatch) return `Nilai: ${parseFloat(numMatch[0]).toFixed(4)}`;
-      return "Tidak ada nilai pixel pada lokasi ini";
-    } catch (e) {
-      return "Tidak ada nilai pixel pada lokasi ini";
-    }
+    if (!pixel) return "*Klik pada peta untuk melihat nilai pixel.";
+    if (pixel.error) return "Gagal mengambil data pixel.";
+    if (pixel.value === null || pixel.value === undefined) return "Tidak ada nilai pixel.";
+    return `Nilai Pixel: ${pixel.value.toFixed(3)}`;
   };
 
   return (
@@ -52,9 +43,9 @@ export default function InformasiPeta({ target = "main", position = "left" }) {
         onClick={() => setOpen((s) => !s)}
         sx={{
           position: "absolute",
-          bottom: 15,
+          bottom: isMobile ? 100 : isTablet ? 500 : 40,
           [position]: 35,
-          zIndex: 1300,
+          zIndex: 2000,
           bgcolor: "#0d47a1",
           color: "white",
           width: 40,
@@ -73,33 +64,53 @@ export default function InformasiPeta({ target = "main", position = "left" }) {
           elevation={8}
           sx={{
             position: "absolute",
-            bottom: 15,
+            bottom: isMobile ? 140 : isTablet ? 500 : 40,
             [position]: 80,
-            zIndex: 1300,
-            width: 300,
+            zIndex: 2000,
+            width: isMobile ? "85vw" : isTablet ? "30vw" : "300px",
+            maxHeight: isMobile ? "45vh" : isTablet ? "60vh" : "70vh",
             borderRadius: 3,
             bgcolor: "rgba(255,255,255,0.98)",
             overflow: "hidden",
           }}
         >
-          <Box sx={{ bgcolor: "#0d47a1", color: "white", px: 2, py: 1 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+          {/* Header */}
+          <Box
+            sx={{
+              bgcolor: "#0d47a1",
+              color: "white",
+              borderRadius: 2,
+              py: 1.5,
+              mb: 1,
+              textAlign: "center",
+              fontWeight: 700,
+            }}
+          >
+            <Typography variant="subtitle10" sx={{ fontWeight: 500, fontSize: 16 }}>
               Informasi Peta
             </Typography>
           </Box>
 
           <CardContent>
-            <Typography variant="body2" sx={{ mt: 1 }}>
+            {/* Pixel value */}
+            <Typography variant="body2" sx={{ mt: 0 }}>
               {renderPixelText()}
             </Typography>
 
-            {/* Legend (tetap per submenu, tidak mengikuti layer selection individual) */}
+            {/* Legend */}
             {menuLegends.length > 0 && (
               <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 1.5 }}>
                 {menuLegends.map((legend, idx) => (
                   <Box key={idx} sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                    <Box sx={{ width: 50, height: 20, borderRadius: 1, background: legend.gradient }} />
-                    <Typography variant="caption" sx={{ fontWeight: 600, whiteSpace: "nowrap" }}>
+                    <Box
+                      sx={{
+                        width: 50,
+                        height: 20,
+                        borderRadius: 1,
+                        background: legend.gradient,
+                      }}
+                    />
+                    <Typography variant="caption" sx={{ fontWeight: 550, fontSize: 12, whiteSpace: "nowrap" }}>
                       {legend.title || (legend.labels ? legend.labels.join(" - ") : "")}
                     </Typography>
                   </Box>

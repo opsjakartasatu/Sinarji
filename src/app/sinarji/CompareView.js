@@ -5,12 +5,12 @@ import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
 import WMSLayer from "@arcgis/core/layers/WMSLayer";
 import Zoom from "@arcgis/core/widgets/Zoom";
-import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
-import Expand from "@arcgis/core/widgets/Expand";
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils";
 import "@arcgis/core/assets/esri/themes/light/main.css";
-import { useMapContext } from "@/app/sinarji/MapContext";
+import { useMapContext } from "./MapContext";
 import Sidebar from "@/components/sidebarDashboard/SidebarSinarji";
 import InformasiPeta from "@/app/sinarji/InformasiPeta";
+import "./style.css";
 
 const GEOSERVER_URL_ADMIN = "https://gis.dcktrp.id/gispublik/publik/Batas%20Administrasi%20Wilayah%20Jakarta/ows?service=WMS&version=1.3.0&request=GetCapabilities";
 
@@ -21,10 +21,7 @@ export default function CompareView() {
   const rightRef = useRef(null);
   const mapLeftRef = useRef(null);
   const mapRightRef = useRef(null);
-  const viewLeftRef = useRef(null);
-  const viewRightRef = useRef(null);
 
-  // === Init maps (once when compare mode enabled)
   useEffect(() => {
     if (!isCompareMode) return;
 
@@ -37,31 +34,11 @@ export default function CompareView() {
       container: leftRef.current,
       map: mapLeft,
       center: [106.8456, -6.2088],
-      zoom: 11,
+      zoom: 12,
       ui: { components: [] },
     });
-    viewLeftRef.current = mvLeft;
     setViewLeft(mvLeft);
-
     mvLeft.ui.add(new Zoom({ view: mvLeft }), "bottom-right");
-    mvLeft.ui.add(
-      new Expand({
-        view: mvLeft,
-        content: new BasemapGallery({ view: mvLeft }),
-        expandTooltip: "Pilih Basemap",
-        expandIconClass: "esri-icon-basemap",
-      }),
-      "bottom-right"
-    );
-
-    const adminLayerLeft = new WMSLayer({
-      id: "batas-admin",
-      url: GEOSERVER_URL_ADMIN,
-      sublayers: [{ name: "Batas Administrasi Wilayah Jakarta" }],
-      opacity: 1,
-      visible: true,
-    });
-    mapLeft.add(adminLayerLeft);
 
     // --- Map Right
     const mapRight = new Map({ basemap: "satellite" });
@@ -72,22 +49,21 @@ export default function CompareView() {
       container: rightRef.current,
       map: mapRight,
       center: [106.8456, -6.2088],
-      zoom: 11,
+      zoom: 12,
       ui: { components: [] },
     });
-    viewRightRef.current = mvRight;
     setViewRight(mvRight);
+    mvRight.ui.add(new Zoom({ view: mvRight }), "bottom-left");
 
-    mvRight.ui.add(new Zoom({ view: mvRight }), "bottom-right");
-    mvRight.ui.add(
-      new Expand({
-        view: mvRight,
-        content: new BasemapGallery({ view: mvRight }),
-        expandTooltip: "Pilih Basemap",
-        expandIconClass: "esri-icon-basemap",
-      }),
-      "bottom-right"
-    );
+    // --- Admin Layers
+    const adminLayerLeft = new WMSLayer({
+      id: "batas-admin",
+      url: GEOSERVER_URL_ADMIN,
+      sublayers: [{ name: "Batas Administrasi Wilayah Jakarta" }],
+      opacity: 1,
+      visible: true,
+    });
+    mapLeft.add(adminLayerLeft);
 
     const adminLayerRight = new WMSLayer({
       id: "batas-admin",
@@ -98,85 +74,76 @@ export default function CompareView() {
     });
     mapRight.add(adminLayerRight);
 
-    // sync extent antar view
+    // === Sync view
     function syncViews(view1, view2) {
-      let isSyncing = false;
-      view1.when(() => {
-        view1.watch("extent", (ext) => {
-          if (isSyncing || !ext) return;
-          isSyncing = true;
-          view2.when(() => {
-            view2.goTo(ext, { animate: false }).finally(() => {
-              isSyncing = false;
-            });
-          });
-        });
-      });
+      let timeout;
+      const stopWatch = reactiveUtils.watch(
+        () => view1.viewpoint,
+        (vp) => {
+          if (!vp || !view2 || view2.destroyed) return; // <-- cek view2
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            if (!view2.destroyed) view2.viewpoint = vp.clone();
+          }, 80);
+        }
+      );
+      return stopWatch; // simpan agar bisa dibersihkan
     }
+
     syncViews(mvLeft, mvRight);
     syncViews(mvRight, mvLeft);
+
+    const stop1 = syncViews(mvLeft, mvRight);
+    const stop2 = syncViews(mvRight, mvLeft);
 
     return () => {
       try {
         mvLeft.destroy();
         mvRight.destroy();
       } catch (e) {}
+      stop1 && stop1.remove(); // bersihkan watch
+      stop2 && stop2.remove();
     };
   }, [isCompareMode, setMapLeft, setViewLeft, setMapRight, setViewRight]);
 
-  // === Sync layersStateLeft -> mapLeft (existing logic)
-  useEffect(() => {
-    if (!mapLeftRef.current) return;
+  // === Sync layers & add raster layer clickable
+  const syncLayers = (layersState, mapRef) => {
+    if (!mapRef.current) return;
 
-    layersStateLeft.forEach((layerConfig) => {
+    layersState.forEach((layerConfig) => {
       const { id, name, names, visible, opacity, url } = layerConfig;
-      let existing = mapLeftRef.current.findLayerById(id);
+      let existing = mapRef.current.findLayerById(id);
 
       if (visible && !existing) {
-        const newLayer = new WMSLayer({
+        const layer = new WMSLayer({
           id,
           url,
-          sublayers: names ? names.map((n) => ({ name: n })) : [{ name }],
+          sublayers: names ? names.map((n) => ({ name: n, popupEnabled: true })) : [{ name, popupEnabled: true }],
           opacity,
         });
-        mapLeftRef.current.add(newLayer);
+        mapRef.current.add(layer);
       } else if (!visible && existing) {
-        mapLeftRef.current.remove(existing);
+        mapRef.current.remove(existing);
       } else if (visible && existing) {
         existing.opacity = opacity;
       }
     });
-  }, [layersStateLeft]);
 
-  // === Sync layersStateRight -> mapRight (existing logic)
-  useEffect(() => {
-    if (!mapRightRef.current) return;
+    // pastikan admin layer paling atas
+    const adminLayer = mapRef.current.findLayerById("batas-admin");
+    if (adminLayer) {
+      mapRef.current.reorder(adminLayer, mapRef.current.layers.length - 1);
+    }
+  };
 
-    layersStateRight.forEach((layerConfig) => {
-      const { id, name, names, visible, opacity, url } = layerConfig;
-      let existing = mapRightRef.current.findLayerById(id);
+  useEffect(() => syncLayers(layersStateLeft, mapLeftRef), [layersStateLeft]);
+  useEffect(() => syncLayers(layersStateRight, mapRightRef), [layersStateRight]);
 
-      if (visible && !existing) {
-        const newLayer = new WMSLayer({
-          id,
-          url,
-          sublayers: names ? names.map((n) => ({ name: n })) : [{ name }],
-          opacity,
-        });
-        mapRightRef.current.add(newLayer);
-      } else if (!visible && existing) {
-        mapRightRef.current.remove(existing);
-      } else if (visible && existing) {
-        existing.opacity = opacity;
-      }
-    });
-  }, [layersStateRight]);
-
-  // === GetFeatureInfo LEFT (register/unregister dengan cleanup)
+  // === GetFeatureInfo LEFT
   useEffect(() => {
     if (!viewLeft) return;
 
-    let handler = viewLeft.on("click", async (event) => {
+    const handler = viewLeft.on("click", async (event) => {
       if (!mapLeftRef.current) return;
 
       const activeLayerConfig = layersStateLeft.find((l) => l.visible && l.id !== "batas-admin");
@@ -193,6 +160,7 @@ export default function CompareView() {
 
       try {
         await layer.when();
+        await viewLeft.whenLayerView(layer); // pastikan layer siap
 
         const screenPoint = viewLeft.toScreen(event.mapPoint);
         const extent = viewLeft.extent;
@@ -215,24 +183,27 @@ export default function CompareView() {
 
         const res = await fetch(`${activeLayerConfig.url}?${params.toString()}`);
         const text = await res.text();
-        console.log("GetFeatureInfo LEFT result:", text); // <-- debug dulu
-        setPixelValueLeft(text);
+        const match = text.match(/GRAY_INDEX\s*=\s*([0-9\.\-eE]+)/);
+
+        if (match) {
+          setPixelValueLeft({ raw: text, value: parseFloat(match[1]) });
+        } else {
+          setPixelValueLeft({ raw: text, value: null, error: true });
+        }
       } catch (err) {
         console.error("GetFeatureInfo Left gagal:", err);
         setPixelValueLeft(null);
       }
     });
 
-    return () => {
-      handler && handler.remove();
-    };
-  }, [layersStateLeft, setPixelValueLeft]);
+    return () => handler && handler.remove();
+  }, [layersStateLeft, setPixelValueLeft, viewLeft]);
 
-  // === GetFeatureInfo RIGHT (mirip, tapi untuk sisi kanan)
+  // === GetFeatureInfo RIGHT
   useEffect(() => {
     if (!viewRight) return;
 
-    let handler = viewRight.on("click", async (event) => {
+    const handler = viewRight.on("click", async (event) => {
       if (!mapRightRef.current) return;
 
       const activeLayerConfig = layersStateRight.find((l) => l.visible && l.id !== "batas-admin");
@@ -249,6 +220,7 @@ export default function CompareView() {
 
       try {
         await layer.when();
+        await viewRight.whenLayerView(layer); // pastikan layer siap
 
         const screenPoint = viewRight.toScreen(event.mapPoint);
         const extent = viewRight.extent;
@@ -271,28 +243,30 @@ export default function CompareView() {
 
         const res = await fetch(`${activeLayerConfig.url}?${params.toString()}`);
         const text = await res.text();
-        console.log("GetFeatureInfo RIGHT result:", text); // <-- debug dulu
-        setPixelValueRight(text);
+        const match = text.match(/GRAY_INDEX\s*=\s*([0-9\.\-eE]+)/);
+
+        if (match) {
+          setPixelValueRight({ raw: text, value: parseFloat(match[1]) });
+        } else {
+          setPixelValueRight({ raw: text, value: null, error: true });
+        }
       } catch (err) {
         console.error("GetFeatureInfo Right gagal:", err);
         setPixelValueRight(null);
       }
     });
 
-    return () => {
-      handler && handler.remove();
-    };
-  }, [layersStateRight, setPixelValueRight]);
+    return () => handler && handler.remove();
+  }, [layersStateRight, setPixelValueRight, viewRight]);
 
   if (!isCompareMode) return null;
 
   return (
     <Box sx={{ display: "flex", height: "100vh", width: "100%", position: "relative" }}>
-      <Sidebar position="left" target="left" />
+      <Sidebar target="left" />
       <Box ref={leftRef} sx={{ flex: 1, borderRight: "2px solid #ccc" }} id="map-left" />
       <Box ref={rightRef} sx={{ flex: 1, borderLeft: "2px solid #ccc" }} id="map-right" />
-      <Sidebar position="right" target="right" />
-
+      <Sidebar target="right" />
       <InformasiPeta target="left" position="left" />
       <InformasiPeta target="right" position="right" />
     </Box>

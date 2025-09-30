@@ -19,7 +19,7 @@ function MainContent() {
   const sidebarWidth = sidebarOpen ? 320 : 64; // sesuaikan dengan ukuran sidebar kamu
 
   return (
-    <Box sx={{ width: "100vw", height: "100vh", display: "flex" }}>
+    <Box sx={{ width: "100vw", height: "100dvh", display: "flex" }}>
       {/* Sidebar */}
       {isCompareMode ? (
         <>
@@ -31,24 +31,16 @@ function MainContent() {
       )}
 
       {/* Konten Utama */}
-      <Box sx={{ flex: 1, position: "relative" }}>
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* Navbar di atas */}
         <Navbar />
 
-        {/* Switch antara Map utama & Compare */}
-        {isCompareMode ? <CompareView /> : <MapView />}
-
-        {/* PlayControl hanya tampil saat mode normal */}
-        {!isCompareMode && <PlayControl />}
-
-        {/* 🔹 Informasi Peta (floating ikut sidebar) */}
-        {isCompareMode ? (
-          <>
-            {/* <InformasiPeta position="left" />
-            <InformasiPeta position="right" /> */}
-          </>
-        ) : (
-          <InformasiPeta position="left" />
-        )}
+        {/* Map full sisa layar */}
+        <Box sx={{ flex: 1, position: "relative", overflow: "hidden" }}>
+          {isCompareMode ? <CompareView /> : <MapView />}
+          {!isCompareMode && <PlayControl />}
+          {!isCompareMode && <InformasiPeta position="left" />}
+        </Box>
       </Box>
     </Box>
   );

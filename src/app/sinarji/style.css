@@ -9,3 +9,15 @@
 .esri-ui-bottom-right > .esri-component {
   margin-bottom: 5px; /* biar ada spasi antar tombol */
 }
+
+@media (max-width: 1036px) {
+  .esri-ui-bottom-right {
+    margin-bottom: 480px; /* tablet */
+  }
+}
+
+@media (max-width: 640px) {
+  .esri-ui-bottom-right {
+    margin-bottom: 100px; /* hp kecil */
+  }
+}

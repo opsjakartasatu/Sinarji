@@ -29,7 +29,7 @@ export default function MapViewComponent() {
       container: mapNodeRef.current,
       map,
       center: [106.8456, -6.2088],
-      zoom: 11,
+      zoom: 12,
       ui: { components: [] },
     });
 
@@ -126,7 +126,13 @@ export default function MapViewComponent() {
         console.log("Pixel value (raw):", data);
 
         // simpan ke context
-        setPixelValue(data);
+        // parse GRAY_INDEX dari hasil GetFeatureInfo
+        const match = data.match(/GRAY_INDEX\s*=\s*([0-9\.\-eE]+)/);
+        if (match) {
+          setPixelValue({ raw: data, value: parseFloat(match[1]) });
+        } else {
+          setPixelValue({ raw: data, value: null, error: true });
+        }
       } catch (err) {
         console.error("GetFeatureInfo error:", err);
       }
@@ -136,7 +142,7 @@ export default function MapViewComponent() {
   }, [layersState, setPixelValue]);
 
   return (
-    <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
+    <Box sx={{ width: "100%", height: "100dvh", position: "relative" }}>
       <Box ref={mapNodeRef} sx={{ width: "100%", height: "100%" }} />
     </Box>
   );
